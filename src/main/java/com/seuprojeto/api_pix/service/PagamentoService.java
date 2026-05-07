@@ -3,6 +3,7 @@ package com.seuprojeto.api_pix.service;
 import com.seuprojeto.api_pix.domain.Pagamento;
 import com.seuprojeto.api_pix.domain.StatusPagamento;
 import com.seuprojeto.api_pix.dto.PagamentoRequest;
+import com.seuprojeto.api_pix.dto.PagamentoResponse;
 import com.seuprojeto.api_pix.repository.PagamentoRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ public class PagamentoService {
         this.repository = repository;
     }
 
-    public Pagamento criar(PagamentoRequest request){
+    public PagamentoResponse criar(PagamentoRequest request){
 
         Pagamento pagamento = new Pagamento();
 
@@ -27,6 +28,13 @@ public class PagamentoService {
         pagamento.setStatus(StatusPagamento.PENDENTE);
         pagamento.setDataCriacao(LocalDateTime.now());
 
-        return repository.save(pagamento);
+        repository.save(pagamento);
+        PagamentoResponse pagamentoResponse = new PagamentoResponse(pagamento.getId(),
+                pagamento.getValor(),
+                pagamento.getNomePagador(),
+                pagamento.getNomeDestinatario(),
+                pagamento.getStatus(),
+                pagamento.getDataCriacao());
+        return pagamentoResponse;
     }
 }
